@@ -35,9 +35,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/statisticsnorway/sagalog-api.git</connection>
-        <developerConnection>scm:git:git@github.com:statisticsnorway/sagalog-api.git</developerConnection>
-        <url>https://github.com/statisticsnorway/sagalog-api/tree/master</url>
+        <connection>scm:git:git://github.com/statisticsnorway/sagalog-file.git</connection>
+        <developerConnection>scm:git:git@github.com:statisticsnorway/sagalog-file.git</developerConnection>
+        <url>https://github.com/statisticsnorway/sagalog-file/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
