@@ -6,11 +6,13 @@ import no.ssb.sagalog.SagaLogEntry;
 import no.ssb.sagalog.SagaLogEntryBuilder;
 import no.ssb.sagalog.SagaLogEntryId;
 import no.ssb.sagalog.SagaLogEntryType;
+import no.ssb.sagalog.SagaLogId;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,17 +20,25 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-public class FileSagaLog implements SagaLog {
+public class FileSagaLog implements SagaLog, AutoCloseable {
 
-    private AtomicLong nextId = new AtomicLong(0);
+    private final SagaLogId sagaLogId;
+    private final AtomicLong nextId = new AtomicLong(0);
     private final QueueFile queueFile;
 
-    public FileSagaLog(Path path) {
+    public FileSagaLog(SagaLogId sagaLogId) {
+        this.sagaLogId = sagaLogId;
+        Path path = Paths.get(sagaLogId.getInternalId());
         try {
             queueFile = new QueueFile.Builder(path.toFile()).build();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public SagaLogId id() {
+        return sagaLogId;
     }
 
     @Override
@@ -116,6 +126,11 @@ public class FileSagaLog implements SagaLog {
     @Override
     public SagaLogEntryId fromBytes(byte[] idBytes) {
         return new FileSagaLogEntryId(ByteBuffer.wrap(idBytes).getLong());
+    }
+
+    @Override
+    public void close() throws IOException {
+        queueFile.close();
     }
 
     byte[] serialize(SagaLogEntry entry) {
