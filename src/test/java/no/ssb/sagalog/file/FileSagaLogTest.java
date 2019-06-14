@@ -52,7 +52,7 @@ public class FileSagaLogTest {
     @Test
     public void thatTruncateWithReadIncompleteWorks() {
         Deque<SagaLogEntry> initialEntries = writeSuccessfulVanillaSagaExecutionEntries(sagaLog, UUID.randomUUID().toString());
-        sagaLog.truncate(initialEntries.getLast().getId());
+        sagaLog.truncate(initialEntries.getLast().getId()).join();
 
         Deque<SagaLogEntry> expectedEntries = writeSuccessfulVanillaSagaExecutionEntries(sagaLog, UUID.randomUUID().toString());
 
