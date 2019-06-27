@@ -3,7 +3,6 @@ package no.ssb.sagalog.file;
 import no.ssb.sagalog.SagaLog;
 import no.ssb.sagalog.SagaLogEntry;
 import no.ssb.sagalog.SagaLogEntryBuilder;
-import no.ssb.sagalog.SagaLogId;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -33,13 +32,14 @@ public class FileSagaLogTest {
     }
 
     FileSagaLog createNewSagaLog() {
-        Path path = Paths.get("target/test-sagalog.dat");
+        FileSagaLogId logId = new FileSagaLogId(Paths.get("target"), "01", "mylog");
+        Path path = logId.getPath();
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new FileSagaLog(new SagaLogId(path.toAbsolutePath().toString()));
+        return new FileSagaLog(logId);
     }
 
     @Test

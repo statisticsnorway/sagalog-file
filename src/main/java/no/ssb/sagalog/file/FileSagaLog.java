@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,13 +21,13 @@ import java.util.stream.Stream;
 
 public class FileSagaLog implements SagaLog, AutoCloseable {
 
-    private final SagaLogId sagaLogId;
+    private final FileSagaLogId sagaLogId;
     private final AtomicLong nextId = new AtomicLong(0);
     private final QueueFile queueFile;
 
-    public FileSagaLog(SagaLogId sagaLogId) {
-        this.sagaLogId = sagaLogId;
-        Path path = Paths.get(sagaLogId.getInternalId());
+    public FileSagaLog(SagaLogId _sagaLogId) {
+        this.sagaLogId = (FileSagaLogId) _sagaLogId;
+        Path path = sagaLogId.getPath();
         try {
             queueFile = new QueueFile.Builder(path.toFile()).build();
         } catch (IOException e) {
